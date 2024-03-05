@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\workspace\\dietolog\\api\\logs\\2024\\03\\.e1d7a4acf87627349cc8e559df3fced69695d66b-audit.json",
+    "files": [
+        {
+            "date": 1709471828040,
+            "name": "C:\\workspace\\dietolog\\api\\logs\\2024\\03\\log-2024-03-03.log.2024-03-03",
+            "hash": "1cdcb676ec2a32d9c9c42967e63fa9bc02ad6c5cfb78d02390240ce62731d0a3"
+        }
+    ],
+    "hashType": "sha256"
+}
