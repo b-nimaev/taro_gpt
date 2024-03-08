@@ -23,7 +23,7 @@ watch(() => botStore.selectedBot, (newVal, oldVal) => {
   <div>
     <article class="form-for-add-sentence">
       <form @submit.prevent="">
-        <h6>Обучение бота</h6>
+        <h6>Диалог <span class="text-muted">{{ useRoute().params.id }}</span></h6>
         <div v-if="botStore.isLoadingFetchBotlist">
           <p>Загрузка ...</p>
         </div>

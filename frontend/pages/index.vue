@@ -1,7 +1,7 @@
 <template>
   <div class="page home-page">
     <header>
-      <h2 class="mb-0">GPTDietolog</h2>
+      <h2 class="mb-0">GPT Tarolog</h2>
       <p>
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque voluptatem illo maxime.
       </p>

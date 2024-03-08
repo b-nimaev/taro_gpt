@@ -7,32 +7,30 @@ const dialogsController = {
     create: async (req: Request, res: Response) => {
         try {
             
-            const { messages } = req.body
-
-            console.log(messages)
+            const { name } = req.body
             
-            await new DialogModel(messages).save().then(result => console.log(result))
+            const dialog = await new DialogModel({
+                name
+            }).save()
 
-            return res.status(200).json({ messages })
+            return res.status(200).json({ message: 'Диалог создан!', dialog })
 
         } catch {
             logger.error('error')
         }
     },
-    save: async (req: Request, res: Response) => {
-
+    getlist: async (req: Request, res: Response) => {
         try {
-            console.log(123)
+            
             const dialogs = await DialogModel.find()
-            console.log(dialogs)
+            logger.info('Диалоги получены!')
+            return res.status(200).json({ message: 'Диалоги получены!', dialogs, count: dialogs.length })
 
-            return res.status(200)
-
-        } catch (error) {
+        } catch {
             logger.error('error')
+            return res.status(500).json({ message: 'Возникла ошибка при получении диалогов' })
         }
-
-    }
+    },
 };
 
 export default dialogsController;

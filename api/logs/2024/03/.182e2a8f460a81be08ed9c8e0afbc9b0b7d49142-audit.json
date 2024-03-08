@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\workspace\\taro_gpt\\api\\logs\\2024\\03\\.182e2a8f460a81be08ed9c8e0afbc9b0b7d49142-audit.json",
+    "files": [
+        {
+            "date": 1709729947793,
+            "name": "C:\\workspace\\taro_gpt\\api\\logs\\2024\\03\\log-2024-03-06.log.2024-03-06",
+            "hash": "c458533a1328e88c2bddd25d7ea226e4d7c71ebea9a3e431dd50dbbd64598d4c"
+        },
+        {
+            "date": 1709788316344,
+            "name": "C:\\workspace\\taro_gpt\\api\\logs\\2024\\03\\log-2024-03-06.log.2024-03-07",
+            "hash": "86acf954c180329bc8ed157c7496f033d869ca9ca17630644ed407e459965bc9"
+        }
+    ],
+    "hashType": "sha256"
+}

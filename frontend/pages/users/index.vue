@@ -1,48 +1,47 @@
+<script lang="ts" setup>
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+useSeoMeta({
+  title: "Пользователи",
+});
+definePageMeta({
+  middleware: ["authed"],
+});
+onBeforeMount(() => {
+  userStore.fetchUsers();
+});
+</script>
 <template>
   <div class="page">
     <div class="container-fluid">
       <DashboardHeadingComponent title="Пользователи" />
-      <p>
-        <i>Пользователей найдено: 51</i>
-      </p>
-      <div v-if="users">
-        <div class="user" v-for="(user, index) in users" :key="index">
-          <div class="avatar">
-            <NuxtImg :src="user.avatar" alt="" v-if="user.avatar" />
-            <NuxtImg src="https://placehold.co/96x96" alt="" v-else />
-          </div>
-          <div class="userdata">
-            <span class="user-fullname">{{
-              user.firstName + " " + user.lastName
-            }}</span>
+      <div v-if="userStore.isFetchingUsers">
+        <p>Загрузка пользователей</p>
+      </div>
+      <div v-else-if="userStore.isErrorFetchingUsers">
+        <p>{{ userStore.errorFetchingUsers }}</p>
+      </div>
+      <div v-else>
+        <p>
+          <i>Пользователей найдено: {{ userStore.users.length }}</i>
+        </p>
+        <div v-if="userStore.users.length">
+          <div class="user" v-for="(user, index) in userStore.users" :key="user._id">
+            <div class="avatar">
+              <NuxtImg :src="user.avatar" alt="" v-if="user.avatar" />
+              <NuxtImg src="https://placehold.co/96x96" alt="" v-else />
+            </div>
+            <div class="userdata">
+              <span class="user-fullname">{{
+                user.firstName + " " + user.lastName
+              }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script lang="ts" setup>
-const users = ref("");
-useSeoMeta({
-  title: "Пользователи",
-});
-onBeforeMount(() => {
-  const { data, pending, error } = useFetch(
-    () => `http://localhost:5555/api/users`,
-    {
-      method: "get",
-      headers: {
-        Authorization: `Bearer ${useCookie("token").value}`,
-        "Content-Type": "application/json", // Укажите тип контента, если это необходимо,
-      },
-      onResponse({ request, response, options }) {
-        // Process the response data
-        users.value = response._data.users;
-      },
-    }
-  );
-});
-</script>
 
 <style lang="scss" scoped>
 .user {

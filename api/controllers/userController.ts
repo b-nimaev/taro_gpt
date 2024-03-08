@@ -171,7 +171,7 @@ const userController = {
 
             const publicProfiles = users.map((user) => user.getPublicProfile());
 
-            return res.status(200).json({ message: 'Публичные данные всех пользователей получены!', users: publicProfiles });
+            return res.status(200).json({ message: 'Публичные данные всех пользователей получены!', users: publicProfiles, count: users.length });
         } catch (error) {
             logger.error(`Ошибка при получении пользователей: ${error.message}`);
             res.status(500).json({ message: 'Ошибка при получении пользователей' });

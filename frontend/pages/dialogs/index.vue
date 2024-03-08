@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container-fluid">
-      <DashboardHeadingComponent title="Обучение бота" />
+      <DashboardHeadingComponent title="Список диалогов" />
 
       <sentences-content-component />
     </div>
@@ -9,11 +9,12 @@
 </template>
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Вопросы и Ответы'
+  title: 'Диалоги'
 })
 definePageMeta({
   middleware: ["authed"],
 });
+
 </script>
 <style lang="scss" scoped>
 main {

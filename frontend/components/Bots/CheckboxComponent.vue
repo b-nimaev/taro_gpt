@@ -13,7 +13,7 @@ import { ref, defineProps } from "vue";
 import { useBotStore } from "@/stores/botStore";
 
 const props = defineProps({
-  sentenceId: String,
+  botId: String,
   checked: Boolean,
 });
 
@@ -21,9 +21,9 @@ const store = useBotStore();
 const isChecked = ref(props.checked);
 
 function handleChange() {
-  if (props.sentenceId) {
+  if (props.botId) {
     isChecked.value = !isChecked.value;
-    store.toggleDialogCheckStatus(props.sentenceId, isChecked.value);
+    store.toggleBotCheckStatus(props.botId, isChecked.value);
   }
 }
 </script>
