@@ -10,14 +10,16 @@ dotenv.config(); // Загружаем переменные окружения �
 import * as fs from 'fs';
 const PORT = process.env.port || 3000
 
+import { DialogModel } from './models/Dialog';
+
 import userRouter from './routes/userRouter';
 import authenticateToken from './middleware/authenticateToken';
 import sentencesRouter from './routes/sentenceRouter';
 import translationsRouter from './routes/translationRouter';
 import dialectRouter from './routes/dialectRouter';
 import dialogsRouter from './routes/dialogsRouter';
-import { DialogModel } from './models/Dialog';
 import botRouter from './routes/botRouter';
+import chatRouter from './routes/chatRouter';
 
 const app = express();
 const server = createServer(app);
@@ -32,6 +34,7 @@ app.use('/api/vocabulary', authenticateToken, sentencesRouter);
 app.use('/api/translations', authenticateToken, translationsRouter);
 app.use('/api/dialogs', authenticateToken, dialogsRouter);
 app.use('/api/bot', authenticateToken, botRouter);
+app.use('/api/chat', authenticateToken, chatRouter);
 
 server.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
@@ -50,21 +53,4 @@ mongoose.connect(process.env.DB_CONNECTION_STRING)
     console.error('Ошибка при подключении к базе данных:', error);
   });
 
-  // (async () => {
-  //   const dialogs = await DialogModel.find({})
-  //   let data = []
-  //   for (let i = 0; i < dialogs.length; i++) {
-  //     const messagesLength = dialogs[i].messages.length
-  //     let dialogData = { ...dialogs[i].toObject(), _id: undefined } // Create a new object without _id
-  //     for (let z = 0; z < messagesLength; z++) {
-  //       const message = dialogs[i].messages[z]
-  //       console.log(message)
-  //     }
-  //     data.push(dialogData)
-  //   }
-
-  //   // Writing data to input.jsonl
-  //   const jsonString = data.map((obj) => JSON.stringify(obj, null, 0).replace(/\n/g, '')).join('');
-  //   fs.writeFileSync('input.jsonl', jsonString);
-  // })();
 export default server

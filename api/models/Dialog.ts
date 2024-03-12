@@ -26,4 +26,4 @@ const dialogSchema = new Schema<IDialog>({
 
 const DialogModel = model<IDialog>('Dialog', dialogSchema);
 
-export { DialogModel, dialogSchema, IMessage, IDialog };
+export { DialogModel, dialogSchema, IMessage, IDialog, MessageModel };

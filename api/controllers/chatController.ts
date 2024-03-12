@@ -19,6 +19,7 @@ import Recipient from "../models/Recipient";
 const openai = new OpenAI({
   apiKey: process.env.apikey, // This is the default and can be omitted
 });
+
 interface RegisterRequestBody {
   name: string;
   description: string;
@@ -30,7 +31,7 @@ interface RegisterRequest extends Request {
 
 const saltRounds = 10;
 
-const botController = {
+const chatController = {
   register: async (req: RegisterRequest, res: Response) => {
     try {
       const { name, description } = req.body;
@@ -63,6 +64,129 @@ const botController = {
     try {
       const botlist = await Bot.find();
       res.status(200).json({ message: "Список ботов получен!", botlist });
+    } catch (error) {
+      console.error(error);
+      logger.error(`Ошибка при получении списка ботов: ${error.message}`);
+      res.status(500).json({ message: "Ошибка при получении списка ботов" });
+    }
+  },
+  getRecipients: async (req: Request, res: Response) => {
+    try {
+      const recipients = await Recipient.find().populate("messages");
+      res
+        .status(200)
+        .json({ message: "Список пользователей получен!", users: recipients });
+    } catch (error) {
+      console.error(error);
+      logger.error(
+        `Ошибка при получении списка пользователей: ${error.message}`
+      );
+      res
+        .status(500)
+        .json({ message: "Ошибка при получении списка пользователей" });
+    }
+  },
+  getRecipient: async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const recipient = await Recipient.findById(id).populate("messages");
+      res
+        .status(200)
+        .json({ message: "Пользьователь получен!", user: recipient });
+    } catch (error) {
+      console.error(error);
+      logger.error(`Ошибка при получении пользователя: ${error.message}`);
+      res.status(500).json({ message: "Ошибка при получении пользователя" });
+    }
+  },
+  user_is_exists: async (req: Request, res: Response) => {
+    try {
+      const { userId, user } = req.body;
+
+      const recipient = await Recipient.findOne({
+        telegramChatId: Number(userId),
+      });
+
+      if (!recipient) {
+        const newUser = await new Recipient({
+          telegramChatId: Number(userId),
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phoneNumber: user.phone,
+        })
+          .save()
+          .then(() => {
+            logger.info(`Пользователь с ID ${userId} сохранен!`);
+          });
+
+        return res
+          .status(200)
+          .json({ message: "Пользователь зарегистрирован!", user: newUser });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Пользователь получен!", user: recipient });
+    } catch (error) {
+      console.error(error);
+      logger.error(`Ошибка при получении списка ботов: ${error.message}`);
+      res.status(500).json({ message: "Ошибка при получении списка ботов" });
+    }
+  },
+  newMesage: async (req: Request, res: Response) => {
+    try {
+      const { documentId, message } = req.body;
+
+      console.log(req.body);
+
+      const recipient = await Recipient.findById(documentId);
+
+      if (!recipient) {
+        return res.status(400).json({ message: "Пользователь не найден!" });
+      }
+
+      const savedMessage = await new MessageModel({
+        content: message,
+        role: "user",
+      }).save();
+
+      await Recipient.findByIdAndUpdate(documentId, {
+        $push: {
+          messages: savedMessage._id,
+        },
+      });
+
+      const updatedUser = await Recipient.findById(documentId).populate(
+        "messages"
+      );
+
+      const completion = await chatCompletion(updatedUser.messages);
+
+      if (completion) {
+        const completionRespone = await new MessageModel({
+          content: completion.message.content,
+          role: "assistant",
+        }).save();
+
+        await Recipient.findByIdAndUpdate(documentId, {
+          $push: {
+            messages: completionRespone._id,
+          },
+        });
+
+        const updateUserAfterChatCompletion = await Recipient.findById(
+          documentId
+        ).populate("messages");
+
+        return res
+          .status(200)
+          .json({
+            message: "Сообщение добавлено!",
+            updateUserAfterChatCompletion,
+            content: completion.message.content,
+          });
+      }
     } catch (error) {
       console.error(error);
       logger.error(`Ошибка при получении списка ботов: ${error.message}`);
@@ -115,31 +239,6 @@ const botController = {
 
       logger.info("Боты удалены!: " + deletedItems);
       return res.status(200).json({ message: "Боты удалены!", deletedItems });
-    } catch (error) {
-      logger.error(`Ошибка при получении диалога: ${error.message}`);
-      return res.status(500).json({ message: "Ошибка при получении диалога" });
-    }
-  },
-  addUser: async (req: Request, res: Response) => {
-    try {
-
-      const { peer } = req.body;
-      const { id } = req.params;
-
-      if (!isValidObjectId(id)) {
-        return res.status(400).json({ message: "Неверный формат ID бота" });
-      }
-
-      const isExists = await Bot.findById(id)
-
-      if (!isExists) { return res.status(404).json({ message: 'Бот не найден!' }) }
-
-      const newUser = await new Recipient({ telegramUsername: peer }).save()
-
-      // await Bot.findByIdAndUpdate(id)
-
-      return res.status(200).json({ message: "Пользователь добавлен", newUser });
-      
     } catch (error) {
       logger.error(`Ошибка при получении диалога: ${error.message}`);
       return res.status(500).json({ message: "Ошибка при получении диалога" });
@@ -287,10 +386,16 @@ const botController = {
       // Закрываем файл после завершения записи
       fileStream.end();
 
-      const file = await openai.files.create({ file: fs.createReadStream('data2.jsonl'), purpose: 'fine-tune' });
-      const fineTune = await openai.fineTuning.jobs.create({ training_file: file.id, model: 'gpt-3.5-turbo' })
-      console.log(file)
-      console.log(fineTune)
+      const file = await openai.files.create({
+        file: fs.createReadStream("data2.jsonl"),
+        purpose: "fine-tune",
+      });
+      const fineTune = await openai.fineTuning.jobs.create({
+        training_file: file.id,
+        model: "gpt-3.5-turbo",
+      });
+      console.log(file);
+      console.log(fineTune);
 
       return res
         .status(200)
@@ -306,12 +411,11 @@ const botController = {
 
 // Функция для очистки файла
 function clearFile(filename: string) {
-    fs.truncateSync(filename, 0);
+  fs.truncateSync(filename, 0);
 }
 
 // Функция для записи JSONL
 function writeJSONL(filename: string, data: any[], prompt: string) {
-
   const lines = data.map((obj) => {
     // Проходим по каждому объекту в массиве messages и берем только ключи role и content
     const selectedMessages = obj.messages.map((message: any) => {
@@ -326,4 +430,38 @@ function writeJSONL(filename: string, data: any[], prompt: string) {
   });
   fs.appendFileSync(filename, lines.join("\n") + "\n");
 }
-export default botController;
+
+async function chatCompletion(userMessages: any) {
+  const model = "ft:gpt-3.5-turbo-0125:personal::91HMpb72";
+
+  let messages = [];
+  const promt = "Ты хороший пикапер и собеседник, знакомишься с парнями.";
+  const promtMessage = {
+    role: "system",
+    content: promt,
+  };
+
+  messages.push(promtMessage);
+
+  for (let i = 0; i < userMessages.length; i++) {
+    const currentMessage = userMessages[i];
+    messages.push({
+      role: currentMessage.role,
+      content: currentMessage.content,
+    });
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      messages,
+      model,
+    });
+
+    return completion.choices[0];
+  } catch (error) {
+    logger.error(error);
+    return false;
+  }
+}
+
+export default chatController;

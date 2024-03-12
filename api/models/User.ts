@@ -53,6 +53,7 @@ interface IPublicUser {
   email?: string;
   avatar?: string;
   rating: number;
+  role?: string;
   // Другие публичные поля, которые вы хотите включить
 }
 
@@ -107,6 +108,7 @@ UserSchema.methods.getPublicProfile = function (): IPublicUser {
     email: this.email,
     avatar: this.avatar,
     rating: this.rating,
+    role: this.role
     // Другие публичные поля
   };
   return publicUser;
