@@ -20,9 +20,9 @@ onMounted(() => {
     <main>
       <section id="pending-dialogs">
         <div class="custom-row">
-          <h5>Сообщения</h5>
+          <h5>Пользователи</h5>
           <button class="btn btn-dark btn-sm" @click="botStore.toggleModal()">
-            Новый диалог
+            + Добавить пользователя
           </button>
         </div>
 
@@ -61,7 +61,7 @@ onMounted(() => {
             </div>
           </div>
           <div v-else>
-            <p>Выберите диалог!</p>
+            <p>Пользователей не найдено!</p>
           </div>
         </div>
       </section>

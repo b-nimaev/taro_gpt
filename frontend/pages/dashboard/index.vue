@@ -76,7 +76,7 @@ const firstName = ref();
 const lastName = ref();
 onBeforeMount(() => {
   const { data, pending, error } = useFetch(
-    () => `http://localhost:5555/api/users/getMe`,
+    () => `https://drvcash.com/api/users/getMe`,
     {
       method: "get",
       headers: {
@@ -114,7 +114,7 @@ async function uploadFile() {
 }
 async function saveProfilePhoto() {
   const { data, pending, error } = useFetch(
-    () => `http://localhost:5555/api/users/set-profile-photo`,
+    () => `https://drvcash.com/api/users/set-profile-photo`,
     {
       method: "put",
       headers: {
@@ -131,7 +131,7 @@ async function saveProfilePhoto() {
 async function saveUserData() {
   try {
     const { data, pending, error } = useFetch(
-      () => `http://localhost:5555/api/users/update-user-data`,
+      () => `https://drvcash.com/api/users/update-user-data`,
       {
         method: "put",
         headers: {

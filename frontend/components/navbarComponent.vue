@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <h4>Dietolog project</h4>
+    <NuxtLink to="/"><h4>Dating project</h4></NuxtLink>
     <div class="menu-wrapper">
       <div class="menu-content">
         <div class="theme-switcher">
@@ -43,6 +43,11 @@
           <div v-else-if="user.firstName">
             <NuxtLink class="to-dashboard" to="/dashboard">
               <h6>{{ user.firstName }}</h6>
+            </NuxtLink>
+          </div>
+          <div v-else-if="user.username">
+            <NuxtLink class="to-dashboard" to="/dashboard">
+              <h6>{{ user.username }}</h6>
             </NuxtLink>
           </div>
         </div>
@@ -91,6 +96,7 @@ const setTheme = (theme: string) => {
 @media screen and (max-width: 768px) {
   .menu-wrapper {
     position: inherit;
+    display: none;
   }
   .menu-content {
     position: absolute;

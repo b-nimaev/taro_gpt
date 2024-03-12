@@ -22,7 +22,7 @@ watch(() => botStore.selectedBot, (newVal, oldVal) => {
 <template>
   <div>
     <article class="form-for-add-sentence">
-      <form @submit.prevent="">
+      <form @submit.prevent="botStore.appendDialog(selectedDialog)">
         <h6>Обучение бота</h6>
         <div v-if="botStore.isLoadingFetchBotlist">
           <p>Загрузка ...</p>
@@ -93,9 +93,6 @@ watch(() => botStore.selectedBot, (newVal, oldVal) => {
           </div>
 
           <input type="submit" class="mt-3 btn btn-primary" />
-          <div class="my-2" v-if="sentencesStore.isErrorAddSentence">
-            <p class="text-muted">{{ sentencesStore.errorAddSentence }}</p>
-          </div>
         </div>
       </form>
     </article>

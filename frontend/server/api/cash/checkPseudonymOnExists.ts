@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
 
         console.log(body)
 
-        const query = await $fetch('http://localhost:5555/api/cash/checkPseudonym', {
+        const query = await $fetch('https://drvcash.com/api/cash/checkPseudonym', {
             method: 'get',
             params: {
                 cashPseudonym: body.pseudonym 

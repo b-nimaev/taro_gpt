@@ -1,13 +1,16 @@
 <script lang="ts" setup>
-import { useThemeStore } from './stores/themeStore';
+import { useThemeStore } from "./stores/themeStore";
 const themeStore = useThemeStore();
 useHead({
   title: "TaroGPT",
 });
 // Реактивно отслеживаем изменения темы
-watch(() => themeStore.theme, (newTheme) => {
-  updateTheme();
-});
+watch(
+  () => themeStore.theme,
+  (newTheme) => {
+    updateTheme();
+  }
+);
 onMounted(() => {
   updateTheme();
 });
@@ -58,25 +61,43 @@ function updateTheme() {
 <style lang="scss">
 // @import '@/node_modules/bootstrap/scss/bootstrap';
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300&display=swap");
-
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+  --bs-body-font-size: 0.85rem;
+}
 [data-bs-theme="dark"] {
   /* Для темной темы */
   --scrollbar-track-color: #111;
   --scrollbar-thumb-color: #222;
   --scrollbar-thumb-hover-color: #333;
   /* Для темной темы */
-  --body-background-color: #0b0b0b;
+  // --body-background-color: #0b0b0b;
   --bs-heading-color: #dee2e6;
   --bs-link-color-rgb: #dee2e6;
   --bs-link-hover-color-rgb: #dee2e6;
   --bs-body-bg-rgb: #dee2e6;
   --bs-body-color: #dee2e6;
   --bs-table-bg: transparent;
-
+  --bs-body-font-size: 0.85rem !important;
   --notify-background-color: #111;
 
+  --body-background-color: #4a3718;
+  --page-wrapper-background-image: linear-gradient(45deg, #000000d1, #000000);
+  --body-background-image: linear-gradient(90deg, #169089, #9e86de);
+  --main-component-background-color: #69543242;
+
+  --messages-background-image: linear-gradient(90deg, #2723141c, #1a1a1ac2);
+  --messages-main-component-background-color: #111;
+  --message-component-background-color: #1a1a1a;
+  --modal-wrapper-background-color: #ffffffa3;
+
   --background-image: linear-gradient(269deg, #171f2085, #14141482);
-  --component-background-image: linear-gradient(109deg, rgb(14 14 14), rgb(0 0 0 / 11%));
+  --component-background-image: linear-gradient(
+    109deg,
+    rgb(14 14 14),
+    rgb(0 0 0 / 11%)
+  );
   .table {
     --bs-table-bg: transparent;
   }
@@ -93,14 +114,33 @@ function updateTheme() {
   --bs-heading-color: #222;
   --bs-link-color-rgb: #333;
   --bs-link-hover-color-rgb: #111;
-  --body-background-color: #eee;
+  // --body-background-color: #eee;
   --bs-body-bg-rgb: #dee2e6;
   --bs-body-color: #333;
 
+  --body-background-color: #fafafa;
+  --body-background-image: linear-gradient(90deg, #169089, #9e86de);
+  --page-wrapper-background-image: linear-gradient(45deg, white, white);
+
+  --main-component-background-color: #fdfdfd;
+
+  --messages-background-image: linear-gradient(45deg, #e5edff, #e5e7ff);
+  --messages-main-component-background-color: transparent;
+  --message-component-background-color: #fff;
+  --modal-wrapper-background-color: #ffffffa3;
+
   --notify-background-color: #e6e6e6;
 
-  --background-image: linear-gradient(269deg, rgb(255 255 255), rgb(255 255 255));
-  --component-background-image: linear-gradient(109deg, rgb(247 247 247), rgb(245 245 245));
+  --background-image: linear-gradient(
+    269deg,
+    rgb(255 255 255),
+    rgb(255 255 255)
+  );
+  --component-background-image: linear-gradient(
+    109deg,
+    rgb(247 247 247),
+    rgb(245 245 245)
+  );
   &:body {
     background-color: #e5e5e5;
   }
@@ -142,7 +182,6 @@ function updateTheme() {
   }
 }
 
-
 .text-success {
   color: var(--bs-success-rgb) !important;
   opacity: 1;
@@ -177,7 +216,7 @@ function updateTheme() {
 .page-wrapper {
   padding: 1.5rem 1rem;
   border-radius: 1rem;
-  background-image: var(--background-image)
+  background-image: var(--page-wrapper-background-image);
 }
 body,
 .page-wrapper {
@@ -191,7 +230,9 @@ body,
 }
 body {
   padding: 1rem;
-  background-color: var(--body-background-color);
+  // background-color: var(--body-background-color);
+  background-image: var(--body-background-image);
+  font-size: var(--bs-body-font-size) !important;
 }
 .btn.btn-success {
   color: #fff;
@@ -218,16 +259,15 @@ footer {
     font-size: 80%;
   }
 }
-:root {
-  --bs-body-font-size: 1rem;
-}
 @media screen and (max-width: 768px) {
-  :root, [data-bs-theme="light"] {
+  :root,
+  [data-bs-theme="light"],
+  :root,
+  [data-bs-theme="dark"] {
     --bs-body-font-size: 1rem !important;
   }
   body {
     padding: 0;
-    font-size: var(--bs-body-font-size) !important;
   }
   .page-wrapper {
     border-radius: 0;

@@ -8,7 +8,7 @@
               <div class="user-info">
                 <h6>Личный кабинет</h6>
                 <p class="small text-muted">
-                  BurLive<span class="status"></span>
+                  Dating<span class="status"></span>
                 </p>
                 <ul></ul>
               </div>

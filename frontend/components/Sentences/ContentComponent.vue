@@ -153,7 +153,7 @@ const activeCheckboxes = computed(() => {
   top: 0;
   left: 0;
   display: flex;
-  background: #000000c2;
+  background: var(--modal-wrapper-background-color);
   .modal-content {
     margin: auto;
     width: fit-content;
@@ -172,8 +172,8 @@ const activeCheckboxes = computed(() => {
 }
 main {
   padding: 1rem;
-  background-color: var(--body-background-color);
-  border-radius: 1rem;
+  // background-color: var(--main-component-background-color);
+  border-radius: 10px;
   section {
     margin-bottom: 1.5rem;
     &:last-child {

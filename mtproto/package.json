@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/node": "^20.11.25",
+    "input": "^1.0.1",
+    "openai": "^4.28.4",
+    "telegram": "^2.19.20"
+  }
+}

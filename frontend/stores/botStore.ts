@@ -1,6 +1,5 @@
 // stores/botStore.ts
 import { defineStore } from "pinia";
-import type { Sentence, SentencesResponse } from "@/types/sentences";
 import type { ApiError } from "@/types/error";
 
 export const useBotStore = defineStore("bot", {
@@ -8,11 +7,22 @@ export const useBotStore = defineStore("bot", {
     botName: "",
     botDescription: "",
     selectedBot: "",
-    botList: [] as { name: string; description: string; _id: string, checkStatus: boolean }[],
+    botList: [] as {
+      name: string;
+      description: string;
+      _id: string;
+      checkStatus: boolean;
+    }[],
     declineSentenceResponse: {
       message: "",
     },
     dialogList: [] as any[],
+
+    activeDialog: {} as {
+      _id: string;
+      name: string;
+    },
+
     fetchDialogsResult: {} as {
       message: string;
       dialogs: {
@@ -25,6 +35,19 @@ export const useBotStore = defineStore("bot", {
           _id: string;
         }[];
       }[];
+    },
+
+    fetchMessagesResult: {} as {
+      message: string;
+      dialog: {
+        _id: string;
+        name: string;
+        messages: {
+          content: string;
+          role: "user" | "assistant";
+          _id: string;
+        }[];
+      };
     },
 
     createDialogName: "",
@@ -44,19 +67,25 @@ export const useBotStore = defineStore("bot", {
     }[],
 
     isLoading: false,
+    isLoadingDeleteBotList: false,
     isLoadingCreateDialog: false,
     isLoadingFetchBotlist: false,
     isLoadingFetchBotDialogs: false,
+    isLoadingFetchDialogMessages: false,
 
     isError: false,
+    isErrorDeleteBotList: false,
     isErrorCreateDialog: false,
     isErrorBotlistLoading: false,
     isErrorSelectedDialogLoading: false,
+    isErrorFetchingDialogMessages: false,
 
     error: null as ApiError | null,
+    errorDeleteBotList: null as ApiError | null,
     errorCreateDialog: null as ApiError | null,
     errorBotlistLoading: null as ApiError | null,
     errorSelectedDialogLoading: null as ApiError | null,
+    errorFetchingDialogMessages: false,
 
     userMessage: "",
     assistantMessage: "",
@@ -67,7 +96,7 @@ export const useBotStore = defineStore("bot", {
     async createBot() {
       this.isLoading = true;
       try {
-        const response = await fetch("http://localhost:5555/api/bot", {
+        const response = await fetch("https://drvcash.com/api/bot", {
           method: "post",
           body: JSON.stringify({
             name: this.botName,
@@ -95,9 +124,9 @@ export const useBotStore = defineStore("bot", {
           error.name = "Ошибка";
         } else {
           this.botList.push(data.bot);
-          this.botList.forEach(element => {
-            element.checkStatus = false
-          })
+          this.botList.forEach((element) => {
+            element.checkStatus = false;
+          });
           this.botName = "";
           this.botDescription = "";
         }
@@ -117,7 +146,7 @@ export const useBotStore = defineStore("bot", {
       this.isLoadingFetchBotlist = true;
       this.selected_dialog = []; // Очистка списка перед загрузкой
       try {
-        const response = await fetch("http://localhost:5555/api/bot", {
+        const response = await fetch("https://drvcash.com/api/bot", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${useCookie("token").value}`,
@@ -164,7 +193,7 @@ export const useBotStore = defineStore("bot", {
       this.dialogList = []; // Очистка списка перед загрузкой
       try {
         const response = await fetch(
-          `http://localhost:5555/api/bot/${botId}/dialogs`,
+          `https://drvcash.com/api/bot/${botId}/dialogs`,
           {
             method: "GET",
             headers: {
@@ -238,7 +267,7 @@ export const useBotStore = defineStore("bot", {
 
       try {
         const response = await fetch(
-          `http://localhost:5555/api/bot/${this.selectedBot}/create-dialog`,
+          `https://drvcash.com/api/bot/${this.selectedBot}/create-dialog`,
           {
             method: "post",
             body: JSON.stringify({
@@ -264,6 +293,12 @@ export const useBotStore = defineStore("bot", {
           error.message = data.message;
           error.name = "Ошибка";
         } else {
+          let createdDialog: any = data.dialog;
+          createdDialog.checkedStatus = false;
+          console.log(createdDialog);
+
+          this.fetchDialogsResult.dialogs.push(createdDialog);
+
           this.createDialogName = "";
           this.createDialogResult = data;
         }
@@ -287,11 +322,61 @@ export const useBotStore = defineStore("bot", {
       }
     },
     toggleBotCheckStatus(BotId: string, checked: boolean) {
-      const bot = this.botList.find(
-        (s) => s._id === BotId
-      );
+      const bot = this.botList.find((s) => s._id === BotId);
       if (bot) {
         bot.checkStatus = checked;
+      }
+    },
+    deleteDialogs() {
+      const dialogList = this.fetchDialogsResult.dialogs.filter(
+        (dialog) => dialog.checkedStatus
+      );
+      console.log(dialogList);
+    },
+    async deleteBots() {
+      const botList = this.botList.filter((bot) => bot.checkStatus);
+
+      try {
+        const response = await fetch("https://drvcash.com/api/bot", {
+          method: "DELETE",
+          body: JSON.stringify({
+            botList: botList,
+          }),
+          headers: {
+            Authorization: `Bearer ${useCookie("token").value}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data: {
+          message: string;
+          deletedItems: {
+            _id: string;
+          }[];
+        } = await response.json();
+
+        console.log(data);
+
+        if (!response.ok) {
+          const error = new Error();
+          error.message = data.message;
+          error.name = "Ошибка";
+        } else {
+          this.botList = this.botList.filter(
+            (bot) =>
+              !data.deletedItems.some(
+                (deletedBot) => deletedBot._id === bot._id
+              )
+          );
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          this.errorBotlistLoading = error;
+          this.isErrorBotlistLoading = true;
+        } else {
+          this.errorBotlistLoading = { message: "Неизвестная ошибка" };
+        }
+      } finally {
       }
     },
     async toggleModal() {
@@ -302,6 +387,142 @@ export const useBotStore = defineStore("bot", {
     },
     async closeModal() {
       this.createDialogModal = false;
+    },
+    async appendDialog(dialogId: string) {
+      try {
+        const response = await fetch(
+          `https://drvcash.com/api/bot/${dialogId}/new-message`,
+          {
+            method: "PUT",
+            body: JSON.stringify({
+              assistantMessage: this.assistantMessage,
+              userMessage: this.userMessage,
+            }),
+            headers: {
+              Authorization: `Bearer ${useCookie("token").value}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data: {
+          message: string;
+          messages: {
+            newUserMessageSaveResult: {
+              _id: string;
+              content: string;
+              role: "user" | "assistant";
+            };
+            newAssistantMessageSaveResult: {
+              _id: string;
+              content: string;
+              role: "user" | "assistant";
+            };
+          };
+        } = await response.json();
+        console.log(data.message);
+
+        if (
+          this.fetchMessagesResult !== null &&
+          this.fetchMessagesResult.dialog
+        ) {
+          // Проверяем fetchMessagesResult и dialog, чтобы убедиться, что они существуют
+          this.fetchMessagesResult.dialog.messages.push(
+            data.messages.newUserMessageSaveResult,
+            data.messages.newAssistantMessageSaveResult
+          );
+        }
+
+        this.fetchDialogsResult.dialogs.forEach((element, index) => {
+          if (element._id === dialogId) {
+            this.fetchDialogsResult.dialogs[index].messages.push(
+              data.messages.newUserMessageSaveResult,
+              data.messages.newAssistantMessageSaveResult
+            );
+          }
+        });
+
+        this.userMessage = "";
+        this.assistantMessage = "";
+      } catch (error) {
+        if (error instanceof Error) {
+          this.error = error;
+          this.isError = true;
+        } else {
+          this.error = { message: "Неизвестная ошибка" };
+        }
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async fetchMessages(dialogId: string) {
+      try {
+        this.isLoadingFetchDialogMessages = true;
+        const response = await fetch(
+          `https://drvcash.com/api/bot/${dialogId}/dialog`,
+          {
+            method: "get",
+            headers: {
+              Authorization: `Bearer ${useCookie("token").value}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data: {
+          message: string;
+          dialog: {
+            _id: string;
+            name: string;
+            messages: {
+              content: string;
+              role: "user" | "assistant";
+              _id: string;
+            }[];
+          };
+        } = await response.json();
+
+        if (data.message === "Диалог получен!") {
+          this.fetchMessagesResult = data;
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          this.error = error;
+          this.isError = true;
+        } else {
+          this.error = { message: "Неизвестная ошибка" };
+        }
+      } finally {
+        this.isLoadingFetchDialogMessages = false;
+      }
+    },
+    async fineTuning() {
+      try {
+        const botList = this.botList.filter((bot) => bot.checkStatus);
+        await fetch(
+          `https://drvcash.com/api/bot/tuning`,
+          {
+            method: "post",
+            body: JSON.stringify({
+              botList
+            }),
+            headers: {
+              Authorization: `Bearer ${useCookie("token").value}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+      } catch (error) {
+        if (error instanceof Error) {
+          this.error = error;
+          this.isError = true;
+        } else {
+          this.error = { message: "Неизвестная ошибка" };
+        }
+      } finally {
+
+      }
     },
     // Дополнительные actions для удаления, добавления, принятия предложений...
   },

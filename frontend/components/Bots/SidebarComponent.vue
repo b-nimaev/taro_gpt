@@ -35,6 +35,7 @@ watch(() => selectedDialog.value, async (newVal, oldVal) => {
 <template>
   <div>
     <article class="form-for-add-sentence">
+        
       <form @submit.prevent="botStore.appendDialog(<string>useRoute().params.id)" v-if="botStore.fetchMessagesResult.dialog">
         <h6>Диалог <span class="text-muted">{{ botStore.fetchMessagesResult.dialog.name }}</span></h6>
 

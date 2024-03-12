@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 
     try {
 
-        const query = await $fetch('http://localhost:5555/api/cash/register', {
+        const query = await $fetch('https://drvcash.com/api/cash/register', {
             method: 'post',
             body: {
                 name: body.name,

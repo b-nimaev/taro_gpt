@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-const { data: bin, pending, error } = <any>useFetch(() => `http://localhost:5555/api/bin`, {
+const { data: bin, pending, error } = <any>useFetch(() => `https://drvcash.com/api/bin`, {
     method: 'get',
     headers: {
         'Authorization': `Bearer ${useCookie("token").value}`,
@@ -44,7 +44,7 @@ const { data: bin, pending, error } = <any>useFetch(() => `http://localhost:5555
 })
 
 async function saveTelegramData() {
-    const { data: updateResponse, pending: updatePending, error: updateError } = <any>useFetch(() => `http://localhost:5555/api/bin/updateGreetingMessage`, {
+    const { data: updateResponse, pending: updatePending, error: updateError } = <any>useFetch(() => `https://drvcash.com/api/bin/updateGreetingMessage`, {
         method: 'put',
         body: {
             greeting: bin.value[0].greeting,
@@ -57,7 +57,7 @@ async function saveTelegramData() {
 }
 
 async function saveActionData() {
-    const { data: updateResponse, pending: updatePending, error: updateError } = <any>useFetch(() => `http://localhost:5555/api/bin/updateActionMessage`, {
+    const { data: updateResponse, pending: updatePending, error: updateError } = <any>useFetch(() => `https://drvcash.com/api/bin/updateActionMessage`, {
         method: 'put',
         body: {
             action: bin.value[0].action,

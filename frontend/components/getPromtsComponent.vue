@@ -3,7 +3,7 @@ const { data: promts, pending, error } = useFetch<{
     promts: [{
         text: string,
     }]
-}>(() => `http://localhost:5555/api/promt`, {
+}>(() => `https://drvcash.com/api/promt`, {
     method: 'get',
     headers: {
         'Authorization': `Bearer ${useCookie("token").value}`,
