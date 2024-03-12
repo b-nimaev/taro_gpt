@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
-    const query = await $fetch('https://drvcash.com/api/promt/create', {
+    const query = await $fetch('https://drvcash.com/backendapi/promt/create', {
         method: 'post',
         headers: {
             'Authorization': `Bearer ${body.token}`,

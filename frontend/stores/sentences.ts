@@ -40,7 +40,7 @@ export const useSentencesStore = defineStore("sentences", {
       this.isLoading = true;
       try {
         const response = await fetch(
-          "https://drvcash.com/api/sentences/?notAccepted=true",
+          "https://drvcash.com/backendapi/sentences/?notAccepted=true",
           {
             method: "GET",
             headers: {
@@ -73,7 +73,7 @@ export const useSentencesStore = defineStore("sentences", {
       this.isLoadingFetchAcceptedSentence = true;
       try {
         const response = await fetch(
-          "https://drvcash.com/api/sentences/get-accepted-sentence",
+          "https://drvcash.com/backendapi/sentences/get-accepted-sentence",
           {
             method: "GET",
             headers: {
@@ -119,7 +119,7 @@ export const useSentencesStore = defineStore("sentences", {
       this.isLoadingAcceptSentence = true;
       try {
         const response = await fetch(
-          `https://drvcash.com/api/sentences/${sentenceId}/accept`,
+          `https://drvcash.com/backendapi/sentences/${sentenceId}/accept`,
           {
             method: "PUT",
             headers: {
@@ -153,7 +153,7 @@ export const useSentencesStore = defineStore("sentences", {
 
       try {
         const response = await fetch(
-          `https://drvcash.com/api/sentences/${sentenceId}/reject`,
+          `https://drvcash.com/backendapi/sentences/${sentenceId}/reject`,
           {
             method: "PUT",
             headers: {
@@ -198,7 +198,7 @@ export const useSentencesStore = defineStore("sentences", {
 
       try {
         const response = await fetch(
-          "https://drvcash.com/api/sentences/create-sentences-multiple",
+          "https://drvcash.com/backendapi/sentences/create-sentences-multiple",
           {
             method: "POST",
             headers: {

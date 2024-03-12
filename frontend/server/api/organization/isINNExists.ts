@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     try {
 
-        const query = await $fetch('https://drvcash.com/api/organization/isINNExists', {
+        const query = await $fetch('https://drvcash.com/backendapi/organization/isINNExists', {
             method: 'get',
             params: {
                 inn: body.inn

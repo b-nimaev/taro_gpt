@@ -96,7 +96,7 @@ export const useBotStore = defineStore("bot", {
     async createBot() {
       this.isLoading = true;
       try {
-        const response = await fetch("https://drvcash.com/api/bot", {
+        const response = await fetch("https://drvcash.com/backendapi/bot", {
           method: "post",
           body: JSON.stringify({
             name: this.botName,
@@ -146,7 +146,7 @@ export const useBotStore = defineStore("bot", {
       this.isLoadingFetchBotlist = true;
       this.selected_dialog = []; // Очистка списка перед загрузкой
       try {
-        const response = await fetch("https://drvcash.com/api/bot", {
+        const response = await fetch("https://drvcash.com/backendapi/bot", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${useCookie("token").value}`,
@@ -193,7 +193,7 @@ export const useBotStore = defineStore("bot", {
       this.dialogList = []; // Очистка списка перед загрузкой
       try {
         const response = await fetch(
-          `https://drvcash.com/api/bot/${botId}/dialogs`,
+          `https://drvcash.com/backendapi/bot/${botId}/dialogs`,
           {
             method: "GET",
             headers: {
@@ -267,7 +267,7 @@ export const useBotStore = defineStore("bot", {
 
       try {
         const response = await fetch(
-          `https://drvcash.com/api/bot/${this.selectedBot}/create-dialog`,
+          `https://drvcash.com/backendapi/bot/${this.selectedBot}/create-dialog`,
           {
             method: "post",
             body: JSON.stringify({
@@ -337,7 +337,7 @@ export const useBotStore = defineStore("bot", {
       const botList = this.botList.filter((bot) => bot.checkStatus);
 
       try {
-        const response = await fetch("https://drvcash.com/api/bot", {
+        const response = await fetch("https://drvcash.com/backendapi/bot", {
           method: "DELETE",
           body: JSON.stringify({
             botList: botList,
@@ -391,7 +391,7 @@ export const useBotStore = defineStore("bot", {
     async appendDialog(dialogId: string) {
       try {
         const response = await fetch(
-          `https://drvcash.com/api/bot/${dialogId}/new-message`,
+          `https://drvcash.com/backendapi/bot/${dialogId}/new-message`,
           {
             method: "PUT",
             body: JSON.stringify({
@@ -459,7 +459,7 @@ export const useBotStore = defineStore("bot", {
       try {
         this.isLoadingFetchDialogMessages = true;
         const response = await fetch(
-          `https://drvcash.com/api/bot/${dialogId}/dialog`,
+          `https://drvcash.com/backendapi/bot/${dialogId}/dialog`,
           {
             method: "get",
             headers: {
@@ -500,7 +500,7 @@ export const useBotStore = defineStore("bot", {
       try {
         const botList = this.botList.filter((bot) => bot.checkStatus);
         await fetch(
-          `https://drvcash.com/api/bot/tuning`,
+          `https://drvcash.com/backendapi/bot/tuning`,
           {
             method: "post",
             body: JSON.stringify({

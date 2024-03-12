@@ -5,7 +5,7 @@ const { data: deeplinks, pending, error } = useFetch<{
         value: string,
         referredUserId: any[]
     }]
-}>(() => `https://drvcash.com/api/deeplink`, {
+}>(() => `https://drvcash.com/backendapi/deeplink`, {
     method: 'get',
     headers: {
         'Authorization': `Bearer ${useCookie("token").value}`,

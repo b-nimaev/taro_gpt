@@ -4,7 +4,7 @@ const {
   pending,
   error,
 } = useAsyncData(`translations`, () =>
-  $fetch("https://drvcash.com/api/translations", {
+  $fetch("https://drvcash.com/backendapi/translations", {
     method: "get",
     headers: {
       Authorization: `Bearer ${useCookie("token").value}`,

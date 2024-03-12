@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     console.log(body)
-    const query = await $fetch('https://drvcash.com/api/deeplink/create', {
+    const query = await $fetch('https://drvcash.com/backendapi/deeplink/create', {
         method: 'post',
         headers: {
             'Authorization': `Bearer ${body.token}`,

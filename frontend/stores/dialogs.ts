@@ -42,7 +42,7 @@ export const useDialogsStore = defineStore("dialogs", {
     async fetchDialogs() {
       this.isLoading = true;
       try {
-        const response = await fetch("https://drvcash.com/api/dialogs", {
+        const response = await fetch("https://drvcash.com/backendapi/dialogs", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${useCookie("token").value}`,

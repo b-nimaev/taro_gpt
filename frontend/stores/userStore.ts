@@ -45,7 +45,7 @@ export const useUserStore = defineStore("user", {
     async fetchUser() {
       this.isLoading = true;
       try {
-        const response = await fetch("https://drvcash.com/api/users/getMe", {
+        const response = await fetch("https://drvcash.com/backendapi/users/getMe", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${useCookie("token").value}`,
@@ -75,7 +75,7 @@ export const useUserStore = defineStore("user", {
       this.isFetchingRecipient = true;
       try {
         const response = await fetch(
-          "https://drvcash.com/api/chat/get-recipient/" + recipientID,
+          "https://drvcash.com/backendapi/chat/get-recipient/" + recipientID,
           {
             method: "GET",
             headers: {
@@ -106,7 +106,7 @@ export const useUserStore = defineStore("user", {
     async fetchUsers() {
       this.isFetchingUsers = true;
       try {
-        const response = await fetch("https://drvcash.com/api/users", {
+        const response = await fetch("https://drvcash.com/backendapi/users", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${useCookie("token").value}`,
@@ -136,7 +136,7 @@ export const useUserStore = defineStore("user", {
       this.isFetchingRecipients = true;
       try {
         const response = await fetch(
-          "https://drvcash.com/api/chat/recipients",
+          "https://drvcash.com/backendapi/chat/recipients",
           {
             method: "GET",
             headers: {
