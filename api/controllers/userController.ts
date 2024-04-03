@@ -113,7 +113,7 @@ const userController = {
                 await Token.create({ userId: user._id, token, expiresAt });
                 logger.info(`Токен создан для пользователя: ${ user._id }`);
 
-                return res.status(200).json({ token, userId: user._id.toString() });
+                return res.status(200).json({ token, userId: user._id.toString(), user });
             }
 
             console.log(req.body)
