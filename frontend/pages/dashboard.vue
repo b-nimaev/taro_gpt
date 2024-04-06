@@ -18,20 +18,17 @@
                 <li>
                   <NuxtLink to="/dashboard">Мой профиль</NuxtLink>
                 </li>
-                <li>
+                <!-- <li>
                   <NuxtLink to="/dashboard/messages">Сообщения</NuxtLink>
                 </li>
                 <li>
                   <NuxtLink to="/dashboard/sentences">Предложения</NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink to="/dashboard/sentences">Закладки</NuxtLink>
-                </li>
+                </li> -->
               </ul>
             </div>
-            <div class="sidebar-component sidebar-footer">
+            <!-- <div class="sidebar-component sidebar-footer">
               <NuxtLink to="/dashboard/settings">Настройки</NuxtLink>
-            </div>
+            </div> -->
             <button @click="logout" class="btn btn-sm btn-primary mt-2">
               Выйти
             </button>

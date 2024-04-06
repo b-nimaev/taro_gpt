@@ -25,11 +25,12 @@ onBeforeMount(() => {
         </div>
         <div v-else>
           <div class="mb-3"><h5>Администраторы</h5></div>
-          <div v-if="userStore.users.length">
+          <div class="user-list" v-if="userStore.users.length">
             <div
               class="user"
               v-for="(user, index) in userStore.users"
               :key="user._id"
+              :class="{ admin: user.role === 'creator' }"
             >
               <div class="avatar">
                 <NuxtImg :src="user.avatar" alt="" v-if="user.avatar" />
@@ -76,11 +77,21 @@ onBeforeMount(() => {
               </div>
               <NuxtLink :to="'/recipients/' + user._id">
                 <div class="userdata">
-                  <span class="firstname" v-if="user.firstName">{{ user.firstName }} <br></span>
-                  <span class="lastname" v-if="user.lastName">{{ user.lastName }} <br></span>
-                  <span class="user-id" v-if="user.telegramChatId">id: {{ user.telegramChatId }} <br></span>
-                  <span class="phone" v-if="user.phoneNumber">телефон: {{ user.phoneNumber }}</span>
-                  <span class="messages" v-if="user.messages">сообщений: {{ user.messages.length }}</span>
+                  <span class="firstname" v-if="user.firstName"
+                    >{{ user.firstName }} <br
+                  /></span>
+                  <span class="lastname" v-if="user.lastName"
+                    >{{ user.lastName }} <br
+                  /></span>
+                  <span class="user-id" v-if="user.telegramChatId"
+                    >id: {{ user.telegramChatId }} <br
+                  /></span>
+                  <span class="phone" v-if="user.phoneNumber"
+                    >телефон: {{ user.phoneNumber }} <br
+                  /></span>
+                  <span class="messages" v-if="user.messages"
+                    >сообщений: {{ user.messages.length }}</span
+                  >
                 </div>
               </NuxtLink>
             </div>
@@ -92,6 +103,20 @@ onBeforeMount(() => {
 </template>
 
 <style lang="scss" scoped>
+.user-list {
+  // display: flex;
+  .user {
+    margin-right: 1rem;
+    // padding: 1rem;
+    &.admin {
+      padding: 1rem;
+      background: #111;
+      width: fit-content;
+      border-radius: 10px;
+      color: #fff
+    }
+  }
+}
 .user {
   margin-bottom: 1rem;
   display: flex;

@@ -14,7 +14,8 @@ export const useAuthStore = defineStore('user-login', {
         message: '',
         username: '',
         statusCode: 0,
-        password: ''
+        password: '',
+        role: ''
     }),
     actions: {
         async authenticateUser() {
@@ -57,9 +58,17 @@ export const useAuthStore = defineStore('user-login', {
             if (data.value) {
 
                 if (!data.value?.token) { this.message = 'токен не получен'; return }
+                
+                this.authenticated = true,
+                this.role = data.value.user.role
 
+                console.log(data.value)
                 useCookie('token').value = data.value?.token
+                useCookie('role').value = data.value?.user.role
                 useCookie("token", {
+                    maxAge: 60 * 60 * 24 * 3
+                })
+                useCookie("role", {
                     maxAge: 60 * 60 * 24 * 3
                 })
                 useRouter().push('dashboard')

@@ -90,7 +90,7 @@ $border-radius: 8px;
 .messages-wrapper {
   padding: 1rem;
   border-radius: $border-radius;
-  background-color: #000;
+  background-color: var(--messages-wrapper-background-color);
   max-height: 550px;
   overflow: auto;
   max-width: 700px;
@@ -119,7 +119,7 @@ $border-radius: 8px;
     width: fit-content;
 
     .message-inner {
-      background-color: #111;
+      background-color: var(--messages-wrapper-background-inner-color);
       padding: 1rem;
       border-radius: $border-radius;
     }

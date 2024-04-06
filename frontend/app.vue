@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { useThemeStore } from "./stores/themeStore";
+import { useAuthStore } from "@/stores/auth/login"; // Импортируем наше новое хранилище
+const { authenticateUser } = useAuthStore(); // use authenticateUser action from  auth store
 const themeStore = useThemeStore();
 useHead({
   title: "TaroGPT",
@@ -13,6 +15,7 @@ watch(
 );
 onMounted(() => {
   updateTheme();
+  authenticateUser()
 });
 function updateTheme() {
   const theme = themeStore.theme;
@@ -38,7 +41,7 @@ function updateTheme() {
       </div>
     </footer> -->
     </div>
-    <div class="app-notify">
+    <!-- <div class="app-notify">
       <div class="app-notify-content success">
         <div class="heading">
           <h6>Успешно</h6>
@@ -54,7 +57,7 @@ function updateTheme() {
           repellendus quae.
         </p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -86,6 +89,11 @@ function updateTheme() {
   --page-wrapper-background-image: linear-gradient(45deg, #000000d1, #000000);
   --body-background-image: linear-gradient(90deg, #169089, #9e86de);
   --main-component-background-color: #69543242;
+
+  --messages-wrapper-background-color: #111;
+  --messages-wrapper-background-inner-color: #222;
+
+  --menu-content-background-color: #08020e;
 
   --messages-background-image: linear-gradient(90deg, #2723141c, #1a1a1ac2);
   --messages-main-component-background-color: #111;
@@ -123,11 +131,14 @@ function updateTheme() {
   --page-wrapper-background-image: linear-gradient(45deg, white, white);
 
   --main-component-background-color: #fdfdfd;
-
+  --menu-content-background-color: #eee;
   --messages-background-image: linear-gradient(45deg, #e5edff, #e5e7ff);
   --messages-main-component-background-color: transparent;
   --message-component-background-color: #fff;
   --modal-wrapper-background-color: #ffffffa3;
+
+  --messages-wrapper-background-color: #f7f7f7;
+  --messages-wrapper-background-inner-color: #fff;
 
   --notify-background-color: #e6e6e6;
 
